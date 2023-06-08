@@ -726,7 +726,7 @@ impl<'a> DataRequestedByPass<'a> {
     ) -> &'a mut Box<T> {
         let data_any = table.get(key).unwrap().get().as_mut().unwrap();
         match data_any.downcast_mut::<Box<T>>() {
-            None => panic!(Self::gen_downcast_err_str(type_str, key)),
+            None => panic!("{}", Self::gen_downcast_err_str(type_str, key)),
             Some(param) => param,
         }
     }
@@ -739,7 +739,7 @@ impl<'a> DataRequestedByPass<'a> {
     ) -> &'a T {
         let data_any = *table.get(key).unwrap();
         match data_any.downcast_ref::<Box<T>>() {
-            None => panic!(Self::gen_downcast_err_str(type_str, key)),
+            None => panic!("{}", Self::gen_downcast_err_str(type_str, key)),
             Some(param) => param,
         }
     }
