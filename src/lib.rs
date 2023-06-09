@@ -3,3 +3,4 @@
 pub mod GeneratorState;
 pub mod chunk;
 pub mod generation;
+pub mod pass_dependencies;

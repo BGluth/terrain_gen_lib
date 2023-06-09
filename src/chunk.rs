@@ -1,3 +1,5 @@
+//! Core logic for working with chunk coordinates.
+
 use std::hash::Hash;
 
 pub trait ChunkCoord: Eq + Hash + Sized {
@@ -5,6 +7,8 @@ pub trait ChunkCoord: Eq + Hash + Sized {
 
     // Might end up not using a float...
     fn scale_coord(&self, factor: f32) -> Self;
+
+    fn get_scale(&self) -> usize;
 }
 
 /// Get the super chunk coordinate that this sub-chunk belongs to.
