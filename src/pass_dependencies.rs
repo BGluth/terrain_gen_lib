@@ -8,7 +8,7 @@ use crate::{
 type PassDepLookup = HashMap<PassId, Vec<StaticPassDependency>>;
 
 #[derive(Debug)]
-enum DataAccessType {
+pub enum DataAccessType {
     Read,
     Write,
 }
@@ -18,7 +18,7 @@ enum DataAccessTracker {
     Write,
 }
 
-enum StaticPassDependency {
+pub(crate) enum StaticPassDependency {
     DataAccess(StaticPassRunPrereq),
     PrereqPass(PassId),
 }
@@ -34,22 +34,21 @@ struct PassDataReq {
     access_type: DataAccessType,
 }
 
-struct ChunkState<C: ChunkCoord> {
-    coord: C,
+pub(crate) struct ChunkPassState {
     raw_pass_data: HashMap<DataId, UnsafeCell<Box<dyn Any>>>,
     active_data_locks: HashMap<DataId, DataAccessTracker>,
     pending_pass_ids: Vec<PassId>,
     inactive_pass_ids: Vec<PassId>,
 }
 
-impl<C: ChunkCoord> ChunkState<C> {
+impl ChunkPassState {
     /// Release resources and update chunk state from the pass completing.
     pub(crate) fn handle_pass_completed(&mut self, p_id: PassId) {
         todo!()
     }
 
     /// Schedules all passes that are able to run. This causes the chunk state to lock resources.
-    pub(crate) fn schedule_all_passes_that_are_able_to_run(
+    pub(crate) fn schedule_all_passes_that_are_able_to_run<C: ChunkCoord>(
         &mut self,
     ) -> impl Iterator<Item = ScheduledPassInfo<C>> {
         // TODO
@@ -62,7 +61,7 @@ pub(crate) struct ScheduledPassInfo<C: ChunkCoord> {
     coord: C,
 }
 
-struct StaticPassRunPrereq {
+pub(crate) struct StaticPassRunPrereq {
     common: PassRunPrereqCommon,
 }
 
