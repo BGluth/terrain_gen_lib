@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use crate::{
     chunk::ChunkCoord,
     pass_dependencies::{ChunkPassState, DataAccessType, StaticPassDependency},
+    pass_params::PassParam,
     GeneratorState::PassId,
 };
 
@@ -42,6 +43,7 @@ pub struct PassDataAccessReg {
 struct PassInfo {
     name: String,
     deps: Vec<StaticPassDependency>,
+    params: HashMap<String, PassParam>,
 }
 
 struct DataInfo {
