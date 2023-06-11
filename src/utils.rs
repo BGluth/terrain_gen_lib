@@ -1,3 +1,5 @@
+pub type GenerationError = Result<(), String>;
+
 #[derive(Debug, Default)]
 pub(crate) struct IdGenerator {}
 

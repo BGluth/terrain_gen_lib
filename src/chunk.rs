@@ -15,7 +15,7 @@ pub trait ChunkCoord: Eq + Hash + Sized {
 ///
 /// For example, if we have the coord `(3,3)` at 2x and we want to know the 3x coordiate that it is child of, we would get back `(2,2)`.
 pub(crate) fn get_super_chunk_coord_of_coord<T: ChunkCoord>(
-    coord: &T,
+    _coord: &T,
     coord_scale_factor: usize,
     target_coord_scale_factor: usize,
 ) -> T {
@@ -25,7 +25,7 @@ pub(crate) fn get_super_chunk_coord_of_coord<T: ChunkCoord>(
 }
 
 pub(crate) fn get_sub_chunk_coord_of_coord<T: ChunkCoord>(
-    coord: &T,
+    _coord: &T,
     coord_scale_factor: usize,
     target_coord_scale_factor: usize,
 ) -> impl Iterator<Item = T> {

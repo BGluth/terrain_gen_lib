@@ -43,7 +43,7 @@ pub(crate) struct ChunkPassState {
 
 impl ChunkPassState {
     /// Release resources and update chunk state from the pass completing.
-    pub(crate) fn handle_pass_completed(&mut self, p_id: PassId) {
+    pub(crate) fn handle_pass_completed(&mut self, _p_id: PassId) {
         todo!()
     }
 

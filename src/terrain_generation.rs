@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use crate::{
     chunk::ChunkCoord,
     pass_dependencies::{ChunkPassState, DataAccessType, StaticPassDependency},
-    utils::IdGenerator,
     GeneratorState::PassId,
 };
 
@@ -26,7 +25,7 @@ pub struct GenerationStateBuilder {
 }
 
 impl GenerationStateBuilder {
-    pub fn set_chunk_size(self, c_size: usize) -> Self {
+    pub fn set_chunk_size(self, _c_size: usize) -> Self {
         todo!()
     }
 
@@ -55,15 +54,15 @@ pub struct PassInfoBuilder {
 }
 
 impl PassInfoBuilder {
-    pub fn new(name: String) -> Self {
+    pub fn new(_name: String) -> Self {
         todo!()
     }
 
-    pub fn add_data_dep(self, d_reg: PassDataAccessReg) -> Self {
+    pub fn add_data_dep(self, _d_reg: PassDataAccessReg) -> Self {
         todo!()
     }
 
-    pub fn add_prereq_pass(self, p_name: String) -> Self {
+    pub fn add_prereq_pass(self, _p_name: String) -> Self {
         todo!()
     }
 
@@ -77,7 +76,7 @@ pub struct DataInfoBuilder {
 }
 
 impl DataInfoBuilder {
-    pub fn new(name: String) -> Self {
+    pub fn new(_name: String) -> Self {
         todo!()
     }
 

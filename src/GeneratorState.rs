@@ -2,7 +2,7 @@ use std::any::Any;
 use std::cell::UnsafeCell;
 use std::collections::{HashMap, HashSet};
 
-use crate::generation::{DataRequestedByPass, GenerationError};
+use crate::{scheduler_pass_data::DataRequestedByPass, utils::GenerationError};
 
 // TODO: Make concrete/trait versions of these aliases?
 pub type PassId = &'static str;
@@ -112,7 +112,7 @@ pub struct RegisteredInfo {
 }
 
 impl RegisteredInfo {
-    fn new(non_pass_data: NonPassData, params: HashMap<ParamId, Box<dyn Any>>) -> RegisteredInfo {
+    fn new(_non_pass_data: NonPassData, _params: HashMap<ParamId, Box<dyn Any>>) -> RegisteredInfo {
         unimplemented!()
     }
 }
@@ -122,7 +122,7 @@ pub struct NonPassData {
 }
 
 impl NonPassData {
-    fn new(max_threads: usize) -> NonPassData {
+    fn new(_max_threads: usize) -> NonPassData {
         unimplemented!()
     }
 }
@@ -155,7 +155,7 @@ pub struct PassMetaData {
 }
 
 impl PassMetaData {
-    pub fn get_pass_ids<'a>(&'a self) -> impl Iterator<Item = PassId> + 'a {
+    pub fn get_pass_ids(&self) -> impl Iterator<Item = PassId> + '_ {
         self.pass_names.iter().cloned()
     }
 }
@@ -193,7 +193,7 @@ fn validate_that_no_passes_have_duplicate_names(reg_info: &RawRegistrationInfo) 
         }
     }
 
-    if duplicate_names.len() > 0 {
+    if !duplicate_names.is_empty() {
         let mut err_str = String::from("The following names we're given to one or more passes:\n");
         write_strs_as_bullets(duplicate_names, &mut err_str);
         return Err(err_str);
@@ -215,7 +215,7 @@ fn validate_that_all_passes_have_key(
         }
     }
 
-    if other_data_of_passes_missing_key.len() > 0 {
+    if !other_data_of_passes_missing_key.is_empty() {
         let mut err_str = format!(
             "The following registered pass info do not have a corresponding registered {}:\n",
             missing_data_str
@@ -247,7 +247,7 @@ fn validate_that_no_passes_have_both_read_write_on_any_data(
                     .filter(|w_key| data_read_by_pass.contains(w_key));
                 common_keys_buf.extend(keys_in_both_iter);
 
-                if common_keys_buf.len() > 0 {
+                if !common_keys_buf.is_empty() {
                     data_with_read_and_write.push((*pass_name, common_keys_buf.clone()));
                 }
                 common_keys_buf.clear();
@@ -255,7 +255,7 @@ fn validate_that_no_passes_have_both_read_write_on_any_data(
         }
     }
 
-    if data_with_read_and_write.len() > 0 {
+    if !data_with_read_and_write.is_empty() {
         let mut err_str = String::from(
             "The following passes have the same datatypes registered as both read and write:\n",
         );
@@ -280,13 +280,13 @@ fn validate_that_all_prereq_passes_of_passes_exist(p_meta: &PassMetaData) -> Gen
             .filter(|prereq| !p_meta.pass_names.contains(prereq));
         buf.extend(missing_prereqs);
 
-        if buf.len() > 0 {
+        if !buf.is_empty() {
             undefined_prereqs.push((*pass_name, buf.clone()));
         }
         buf.clear();
     }
 
-    if undefined_prereqs.len() > 0 {
+    if !undefined_prereqs.is_empty() {
         let mut err_str =
             String::from("The following passes have prerequisite passes that are not defined:");
         append_parent_and_child_elements_to_string(undefined_prereqs.into_iter(), &mut err_str);
@@ -296,7 +296,7 @@ fn validate_that_all_prereq_passes_of_passes_exist(p_meta: &PassMetaData) -> Gen
 }
 
 fn validate_that_all_requested_data_is_written_by_a_pass(
-    gen_state: &RegisteredInfo,
+    _gen_state: &RegisteredInfo,
 ) -> GenerationError {
     unimplemented!();
 }
@@ -334,7 +334,7 @@ fn extract_data_from_pass_info_into_reg_info(
                 p_data
                     .pass_meta_data
                     .pass_descs
-                    .insert(&raw_pass_info.name, desc);
+                    .insert(raw_pass_info.name, desc);
             }
         }
     }
@@ -346,7 +346,7 @@ fn extract_data_from_pass_info_into_reg_info(
                     .pass_meta_data
                     .pass_mappings
                     .pass_data_req_params
-                    .insert(&raw_pass_info.name, val);
+                    .insert(raw_pass_info.name, val);
             }
 
             PassInfoGroupedDataKeys::ReadAcc => {
@@ -391,9 +391,9 @@ fn append_parent_and_child_elements_to_string<'a, I>(
     I: Iterator<Item = (&'a str, Vec<&'a str>)>,
 {
     for (par_string, bullet_strs) in par_str_with_bullets {
-        str_to_append_to.push_str(&par_string);
+        str_to_append_to.push_str(par_string);
         write_strs_as_bullets(bullet_strs, str_to_append_to);
-        str_to_append_to.push_str("\n");
+        str_to_append_to.push('\n');
     }
 }
 
